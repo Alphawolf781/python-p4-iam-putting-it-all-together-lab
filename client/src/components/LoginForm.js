@@ -4,7 +4,7 @@ import { Button, Error, Input, FormField, Label } from "../styles";
 function LoginForm({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState([]); // Ensure this is an array
   const [isLoading, setIsLoading] = useState(false);
 
   function handleSubmit(e) {
@@ -21,7 +21,10 @@ function LoginForm({ onLogin }) {
       if (r.ok) {
         r.json().then((user) => onLogin(user));
       } else {
-        r.json().then((err) => setErrors(err.errors));
+        r.json().then((err) => {
+          // Use an empty array if err.errors is not defined
+          setErrors(err.errors || []);
+        });
       }
     });
   }
@@ -54,8 +57,8 @@ function LoginForm({ onLogin }) {
         </Button>
       </FormField>
       <FormField>
-        {errors.map((err) => (
-          <Error key={err}>{err}</Error>
+        {errors.map((err, index) => (
+          <Error key={index}>{err}</Error> // Use index if err is not unique
         ))}
       </FormField>
     </form>
